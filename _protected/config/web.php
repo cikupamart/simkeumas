@@ -6,6 +6,7 @@ $config = [
     'defaultRoute' => 'kas/index',
     'id' => 'basic',
     'name' => 'SIMKEUMAS - Sistem Keuangan Masjid',
+    
     'language' => 'en',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'app\components\Aliases'],

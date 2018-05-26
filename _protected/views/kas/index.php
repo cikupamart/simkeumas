@@ -10,7 +10,7 @@ use \kartik\grid\GridView;
 /* @var $searchModel app\models\KasSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Kas | '.Yii::$app->name;
+$this->title = 'Kas | '.Yii::$app->params['shortname'];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="kas-index">
