@@ -50,12 +50,12 @@ $form = ActiveForm::begin();
 
     ?>
 
-    <div class="col-xs-5 col-md-3 col-lg-2">
+    <div class="col-xs-4 col-md-3 col-lg-2">
         
         <?= Html::dropDownList('bulan', !empty($_POST['bulan']) ? $_POST['bulan'] : date('m'),$bulans,['class'=>'form-control ']); ?>
 
     </div>
-     <div class="col-xs-5 col-md-3 col-lg-2">
+     <div class="col-xs-4 col-md-3 col-lg-2">
         
        
         <?= Html::dropDownList('tahun', !empty($_POST['tahun']) ? $_POST['tahun'] : date('Y'),$tahuns,['class'=>'form-control ']); ?>
