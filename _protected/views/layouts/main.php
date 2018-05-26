@@ -50,7 +50,7 @@ AppAsset::register($this);
 
 
         $menuItems[] = ['label' => Yii::t('app', 'Kas'), 'url' => '#','items'=>[
-            ['label' => Yii::t('app', 'Masuk'),'url' => ['kas/create']],
+            ['label' => Yii::t('app', 'Masuk'),'url' => ['kas/masuk']],
             ['label' => Yii::t('app', 'Keluar'),'url' => ['kas/keluar']],
            
         ]];

@@ -29,6 +29,38 @@ class KasController extends Controller
         ];
     }
 
+    public function actionKeluar()
+    {
+        $model = new Kas();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        $jenis = 0;
+
+        return $this->render('create', [
+            'model' => $model,
+            'jenis' => $jenis
+        ]);
+    }
+
+    public function actionMasuk()
+    {
+        $model = new Kas();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        $jenis = 1;
+
+        return $this->render('create', [
+            'model' => $model,
+            'jenis' => $jenis
+        ]);
+    }
+
     /**
      * Lists all Kas models.
      * @return mixed
@@ -36,6 +68,14 @@ class KasController extends Controller
     public function actionIndex()
     {
         $searchModel = new KasSearch();
+        if(!empty($_POST['bulan']) && !empty($_POST['tahun']))
+        {
+            $y = $_POST['tahun'];
+            $m = $_POST['bulan'];
+            $searchModel->start_date = $y.'-'.$m.'-01';
+            $searchModel->end_date = $y.'-'.$m.'-'.date('t');
+        }
+        
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -90,8 +130,11 @@ class KasController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $jenis = $model->jenis_kas;
+
         return $this->render('update', [
             'model' => $model,
+            'jenis' => $jenis
         ]);
     }
 

@@ -12,6 +12,10 @@ use app\models\Kas;
  */
 class KasSearch extends Kas
 {
+
+    public $start_date;
+    public $end_date;
+
     /**
      * {@inheritdoc}
      */
@@ -19,7 +23,7 @@ class KasSearch extends Kas
     {
         return [
             [['id', 'jenis_kas'], 'integer'],
-            [['kwitansi', 'penanggung_jawab', 'keterangan', 'tanggal', 'created'], 'safe'],
+            [['kwitansi', 'penanggung_jawab', 'keterangan', 'tanggal', 'created','start_date','end_date'], 'safe'],
             [['kas_keluar', 'kas_masuk'], 'number'],
         ];
     }
@@ -67,6 +71,14 @@ class KasSearch extends Kas
             'kas_masuk' => $this->kas_masuk,
             'created' => $this->created,
         ]);
+
+        if(empty($this->start_date) && empty($this->end_date))
+        {
+            $this->start_date = date('Y-m-01');
+            $this->end_date = date('Y-m-t');
+        }
+
+        $query->andFilterWhere(['between', 'tanggal', $this->start_date, $this->end_date]);
 
         $query->andFilterWhere(['like', 'kwitansi', $this->kwitansi])
             ->andFilterWhere(['like', 'penanggung_jawab', $this->penanggung_jawab])

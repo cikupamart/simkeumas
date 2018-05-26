@@ -5,8 +5,8 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Kas */
-
-$this->title = 'Create Kas';
+$jenisNama = ($jenis == 1) ? 'Masuk' : 'Keluar';
+$this->title = 'Create Kas '.$jenisNama;
 $this->params['breadcrumbs'][] = ['label' => 'Kas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -14,8 +14,22 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+    <?php 
+    switch ($jenis) {
+    	case 1:
+    		echo $this->render('_masuk', [
+		        'model' => $model,
+		    ]);
+    		break;
+    	
+    	case 0:
+    		echo $this->render('_keluar', [
+		        'model' => $model,
+		    ]);
+    		break;
+    }
+     
+
+    ?>
 
 </div>
