@@ -9,7 +9,7 @@ use app\models\Kas;
 /* @var $searchModel app\models\KasSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Kas';
+$this->title = 'Kas | '.Yii::$app->name;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="kas-index">
@@ -78,7 +78,7 @@ $form = ActiveForm::begin();
              'attribute' =>'penanggung_jawab',
              'footer' => '<strong>Total</strong>',
             ],
-            
+
             'keterangan:ntext',
             'tanggal',
             //'jenis_kas',
