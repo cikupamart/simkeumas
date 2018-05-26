@@ -60,4 +60,13 @@ class Kas extends \yii\db\ActiveRecord
             'created' => 'Created',
         ];
     }
+
+    public static function getTotal($provider, $columnName)
+    {
+        $total = 0;
+        foreach ($provider as $item) {
+          $total += $item[$columnName];
+      }
+      return $total;  
+    }
 }

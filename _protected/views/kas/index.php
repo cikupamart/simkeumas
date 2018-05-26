@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\ActiveForm;
+use app\models\Kas;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\KasSearch */
@@ -67,17 +68,30 @@ $form = ActiveForm::begin();
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'showFooter' => true,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             // 'id',
             'kwitansi',
-            'penanggung_jawab',
+             [
+             'attribute' =>'penanggung_jawab',
+             'footer' => '<strong>Total</strong>',
+            ],
+            
             'keterangan:ntext',
             'tanggal',
             //'jenis_kas',
-            'kas_keluar',
-            'kas_masuk',
+            
+
+            [
+             'attribute' =>'kas_keluar',
+             'footer' => Kas::getTotal($dataProvider->models, 'kas_keluar'),
+            ],
+            [
+             'attribute' =>'kas_masuk',
+             'footer' => Kas::getTotal($dataProvider->models, 'kas_masuk'),
+            ],
             //'created',
 
             ['class' => 'yii\grid\ActionColumn','visible'=>Yii::$app->user->can('admin')],
