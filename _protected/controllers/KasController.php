@@ -34,7 +34,7 @@ class KasController extends Controller
         $model = new Kas();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         $jenis = 0;
@@ -50,7 +50,7 @@ class KasController extends Controller
         $model = new Kas();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         $jenis = 1;
@@ -75,7 +75,7 @@ class KasController extends Controller
             $searchModel->start_date = $y.'-'.$m.'-01';
             $searchModel->end_date = $y.'-'.$m.'-'.date('t');
         }
-        
+
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [

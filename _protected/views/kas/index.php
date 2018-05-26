@@ -1,9 +1,10 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+// use yii\grid\GridView;
 use yii\widgets\ActiveForm;
 use app\models\Kas;
+use \kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\KasSearch */
@@ -49,12 +50,12 @@ $form = ActiveForm::begin();
 
     ?>
 
-    <div class="col-xs-2">
+    <div class="col-xs-4 col-md-3 col-lg-2">
         
         <?= Html::dropDownList('bulan', !empty($_POST['bulan']) ? $_POST['bulan'] : date('m'),$bulans,['class'=>'form-control ']); ?>
 
     </div>
-     <div class="col-xs-2">
+     <div class="col-xs-4 col-md-3 col-lg-2">
         
        
         <?= Html::dropDownList('tahun', !empty($_POST['tahun']) ? $_POST['tahun'] : date('Y'),$tahuns,['class'=>'form-control ']); ?>
@@ -69,10 +70,12 @@ $form = ActiveForm::begin();
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'showFooter' => true,
+        'responsiveWrap' => false,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             // 'id',
+            
             'kwitansi',
              [
              'attribute' =>'penanggung_jawab',
@@ -87,6 +90,7 @@ $form = ActiveForm::begin();
             [
              'attribute' =>'kas_keluar',
              'footer' => Kas::getTotal($dataProvider->models, 'kas_keluar'),
+
             ],
             [
              'attribute' =>'kas_masuk',

@@ -80,7 +80,7 @@ class KasSearch extends Kas
         }
 
         $query->andFilterWhere(['between', 'tanggal', $this->start_date, $this->end_date]);
-
+        $query->orderBy(['tanggal'=>'ASC']);
         $query->andFilterWhere(['like', 'kwitansi', $this->kwitansi])
             ->andFilterWhere(['like', 'penanggung_jawab', $this->penanggung_jawab])
             ->andFilterWhere(['like', 'keterangan', $this->keterangan]);
