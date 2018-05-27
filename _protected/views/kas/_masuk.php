@@ -19,7 +19,7 @@ use yii\web\JsExpression;
     $model->jenis_kas = 1;
     ?>
 
-
+    
 
     <?php 
     $url = \yii\helpers\Url::to(['/perkiraan/ajax-perkiraan']);

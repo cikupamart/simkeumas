@@ -18,8 +18,8 @@ class PerkiraanSearch extends Perkiraan
     public function rules()
     {
         return [
-             [['id', 'perusahaan_id'], 'integer'],
-            [['kode', 'nama', 'parent'], 'safe'],
+            [['id', 'parent', 'perusahaan_id'], 'integer'],
+            [['kode', 'nama'], 'safe'],
         ];
     }
 
@@ -57,19 +57,34 @@ class PerkiraanSearch extends Perkiraan
             return $dataProvider;
         }
 
+        $session = Yii::$app->session;
+        $userPt = '';
+            
+        
+        if($session->isActive)
+        {
+            $userLevel = $session->get('level');    
+            
+            if($userLevel == 'admin'){
+                $userPt = $session->get('perusahaan');
+                $query->andWhere(['perusahaan_id'=>$userPt]);
+            }
+        }
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'parent' => $this->parent,
             'perusahaan_id' => $this->perusahaan_id,
         ]);
-
 
         $query->orderBy(['kode'=>'ASC']);
 
         // grid filtering conditions
+        
+
         $query->andFilterWhere(['like', 'kode', $this->kode])
-            ->andFilterWhere(['like', 'nama', $this->nama])
-            ->andFilterWhere(['like', 'parent', $this->parent]);
+            ->andFilterWhere(['like', 'nama', $this->nama]);
 
         return $dataProvider;
     }

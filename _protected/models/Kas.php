@@ -118,7 +118,7 @@ class Kas extends \yii\db\ActiveRecord
 
         $kas = Kas::find()->where($where)->andWhere(['perusahaan_id'=>$userPt,'kas_besar_kecil'=>$uk])->orderBy(['tanggal'=>'ASC'])->all();
         
-
+        // print_r($saldo_awal);exit;
         // else
         // {
         //     $saldo = Saldo::find()->where(['jenis' => 'besar','bulan'=>$bulan,'tahun'=>$tahun])->one();

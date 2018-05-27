@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 // use yii\grid\GridView;
 use yii\widgets\ActiveForm;
 use app\models\Kas;
@@ -79,7 +80,7 @@ $form = ActiveForm::begin();
             array_merge($where,[
                 'perusahaan_id' => $userPt
             ]);
-            
+
            
         }
     }
@@ -151,7 +152,28 @@ $form = ActiveForm::begin();
             ],
             //'created',
 
-            ['class' => 'yii\grid\ActionColumn','visible'=>Yii::$app->user->can('admin')],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'visible'=>Yii::$app->user->can('admin'),
+                'template' => '{view} {update} {delete}',
+                'buttons' => [
+                     'delete' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+                                   'title'        => 'delete',
+                                    'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                                    'data-method'  => 'post',
+                        ]);
+                    }
+                ],
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    
+                    if ($action === 'delete') {
+                        $url =Url::to(['kas/delete','id'=>$model->id,'uk'=>Yii::$app->getRequest()->getQueryParam('uk')]);
+                        return $url;
+                    }
+
+                  }
+            ],
         ],
     ]); ?>
 </div>

@@ -3,17 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Perkiraan;
-use app\models\PerkiraanSearch;
+use app\models\Neraca;
+use app\models\NeracaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\db\Query;
 
 /**
- * PerkiraanController implements the CRUD actions for Perkiraan model.
+ * NeracaController implements the CRUD actions for Neraca model.
  */
-class PerkiraanController extends Controller
+class NeracaController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,55 +29,30 @@ class PerkiraanController extends Controller
         ];
     }
 
-    public function actionAjaxPerkiraan($q = null, $id = null) {
-        $session = Yii::$app->session;
-        $userPt = '';
-            
-        if($session->isActive)
-        {
-            $userLevel = $session->get('level');    
-            
-            if($userLevel == 'admin'){
-                $userPt = $session->get('perusahaan');
-            }
-        }
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $out = ['results' => ['id' => '', 'text' => '']];
-        if (!is_null($q)) {
-            $query = new Query;
-            $query->select(['id','CONCAT(kode," - ",nama) as text'])
-                ->from('perkiraan')
-                ->where(['and',['perusahaan_id'=>$userPt]])
-                ->orWhere(['or',['like', 'nama', $q],['like','kode',$q]])
-                ->limit(20);
-            $command = $query->createCommand();
-            $data = $command->queryAll();
-            $out['results'] = array_values($data);
-        }
-        elseif ($id > 0) {
-            $out['results'] = ['id' => $id, 'text' => Perkiraan::find($id)->nama];
-        }
-        return $out;
-    }
-
     /**
-     * Lists all Perkiraan models.
+     * Lists all Neraca models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new PerkiraanSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new NeracaSearch();
+        $aktivaLancar = $searchModel->searchAkuns('11');
+        $aktivaTetap = $searchModel->searchAkuns('12');
+        $kewajibanLancar = $searchModel->searchAkuns('21');
+        $modal = $searchModel->searchAkuns('3');
 
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'aktivaLancar' => $aktivaLancar,
+             'aktivaTetap' => $aktivaTetap,
+             'kewajibanLancar' => $kewajibanLancar,
+             'modal' => $modal
         ]);
     }
 
     /**
-     * Displays a single Perkiraan model.
-     * @param string $id
+     * Displays a single Neraca model.
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -90,17 +64,16 @@ class PerkiraanController extends Controller
     }
 
     /**
-     * Creates a new Perkiraan model.
+     * Creates a new Neraca model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Perkiraan();
+        $model = new Neraca();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "Data tersimpan");
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -109,9 +82,9 @@ class PerkiraanController extends Controller
     }
 
     /**
-     * Updates an existing Perkiraan model.
+     * Updates an existing Neraca model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -120,8 +93,7 @@ class PerkiraanController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "Data diupdate");
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -130,9 +102,9 @@ class PerkiraanController extends Controller
     }
 
     /**
-     * Deletes an existing Perkiraan model.
+     * Deletes an existing Neraca model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -144,15 +116,15 @@ class PerkiraanController extends Controller
     }
 
     /**
-     * Finds the Perkiraan model based on its primary key value.
+     * Finds the Neraca model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return Perkiraan the loaded model
+     * @param integer $id
+     * @return Neraca the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Perkiraan::findOne($id)) !== null) {
+        if (($model = Neraca::findOne($id)) !== null) {
             return $model;
         }
 

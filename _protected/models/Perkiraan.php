@@ -10,9 +10,12 @@ use Yii;
  * @property int $id
  * @property string $kode
  * @property string $nama
- * @property string $parent
+ * @property int $parent
  * @property int $perusahaan_id
  *
+ * @property Kas[] $kas
+ * @property Perkiraan $parent0
+ * @property Perkiraan[] $perkiraans
  * @property Perusahaan $perusahaan
  */
 class Perkiraan extends \yii\db\ActiveRecord
@@ -32,9 +35,10 @@ class Perkiraan extends \yii\db\ActiveRecord
     {
         return [
             [['kode', 'nama', 'parent'], 'required'],
-            [['perusahaan_id'], 'integer'],
-            [['kode', 'parent'], 'string', 'max' => 20],
+            [['parent', 'perusahaan_id'], 'integer'],
+            [['kode'], 'string', 'max' => 20],
             [['nama'], 'string', 'max' => 100],
+            [['parent'], 'exist', 'skipOnError' => true, 'targetClass' => Perkiraan::className(), 'targetAttribute' => ['parent' => 'id']],
             [['perusahaan_id'], 'exist', 'skipOnError' => true, 'targetClass' => Perusahaan::className(), 'targetAttribute' => ['perusahaan_id' => 'id_perusahaan']],
         ];
     }
@@ -51,6 +55,30 @@ class Perkiraan extends \yii\db\ActiveRecord
             'parent' => 'Parent',
             'perusahaan_id' => 'Perusahaan ID',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKas()
+    {
+        return $this->hasMany(Kas::className(), ['perkiraan_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParent0()
+    {
+        return $this->hasOne(Perkiraan::className(), ['id' => 'parent']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPerkiraans()
+    {
+        return $this->hasMany(Perkiraan::className(), ['parent' => 'id']);
     }
 
     /**

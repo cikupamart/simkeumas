@@ -211,11 +211,16 @@ class KasController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete($id,$uk)
     {
         $this->findModel($id)->delete();
+        
 
-        return $this->redirect(['index']);
+        $y = date('Y');
+        $m = date('m');
+
+        Kas::updateSaldo($uk,$m,$y);
+        return $this->redirect(['index','uk'=>$uk]);
     }
 
     /**
