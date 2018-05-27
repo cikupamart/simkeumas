@@ -3,17 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Kas;
-use app\models\KasSearch;
+use app\models\Saldo;
+use app\models\SaldoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\Saldo;
 
 /**
- * KasController implements the CRUD actions for Kas model.
+ * SaldoController implements the CRUD actions for Saldo model.
  */
-class KasController extends Controller
+class SaldoController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,90 +29,13 @@ class KasController extends Controller
         ];
     }
 
-    public function actionKeluar()
-    {
-        $model = new Kas();
-
-        $session = Yii::$app->session;
-           
-        $saldo_id = 0;
-
-        if($session->isActive)
-        {
-            $username = $session->get('username');    
-            $model->penanggung_jawab = $username;
-            $saldo_id = $session->get('saldo_id');
-        }
-
-        if ($model->load(Yii::$app->request->post())) {
-
-            $saldo = Saldo::find()->where(['id' => $saldo_id])->one();
-
-            if(!empty($saldo))
-            {
-                $saldo->nilai_akhir -= $model->kas_keluar;
-                $saldo->save(false,['nilai_akhir']);
-
-
-            }
-
-            
-            $model->jenis_kas = 0;
-            $model->save();
-            Yii::$app->session->setFlash('success', "Data tersimpan");
-            return $this->redirect(['index']);
-        }
-
-        $jenis = 0;
-
-        return $this->render('create', [
-            'model' => $model,
-            'jenis' => $jenis
-        ]);
-    }
-
-    public function actionMasuk()
-    {
-        $model = new Kas();
-
-        $session = Yii::$app->session;
-           
-        if($session->isActive)
-        {
-            $username = $session->get('username');    
-            $model->penanggung_jawab = $username;
-        }
-
-        if ($model->load(Yii::$app->request->post())) {
-            $model->jenis_kas = 1;            
-            $model->save();
-             Yii::$app->session->setFlash('success', "Data tersimpan");
-            return $this->redirect(['/kas/index']);
-        }
-
-        $jenis = 1;
-
-        return $this->render('create', [
-            'model' => $model,
-            'jenis' => $jenis
-        ]);
-    }
-
     /**
-     * Lists all Kas models.
+     * Lists all Saldo models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new KasSearch();
-        if(!empty($_POST['bulan']) && !empty($_POST['tahun']))
-        {
-            $y = $_POST['tahun'];
-            $m = $_POST['bulan'];
-            $searchModel->start_date = $y.'-'.$m.'-01';
-            $searchModel->end_date = $y.'-'.$m.'-'.date('t');
-        }
-
+        $searchModel = new SaldoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -123,7 +45,7 @@ class KasController extends Controller
     }
 
     /**
-     * Displays a single Kas model.
+     * Displays a single Saldo model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -136,13 +58,13 @@ class KasController extends Controller
     }
 
     /**
-     * Creates a new Kas model.
+     * Creates a new Saldo model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Kas();
+        $model = new Saldo();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -154,7 +76,7 @@ class KasController extends Controller
     }
 
     /**
-     * Updates an existing Kas model.
+     * Updates an existing Saldo model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -168,16 +90,13 @@ class KasController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        $jenis = $model->jenis_kas;
-
         return $this->render('update', [
             'model' => $model,
-            'jenis' => $jenis
         ]);
     }
 
     /**
-     * Deletes an existing Kas model.
+     * Deletes an existing Saldo model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -191,15 +110,15 @@ class KasController extends Controller
     }
 
     /**
-     * Finds the Kas model based on its primary key value.
+     * Finds the Saldo model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Kas the loaded model
+     * @return Saldo the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Kas::findOne($id)) !== null) {
+        if (($model = Saldo::findOne($id)) !== null) {
             return $model;
         }
 

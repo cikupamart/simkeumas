@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 // use yii\grid\GridView;
 use yii\widgets\ActiveForm;
-use app\models\Kas;
+
 use \kartik\grid\GridView;
 
 use app\models\Saldo;
@@ -12,7 +12,7 @@ use app\models\Saldo;
 /* @var $searchModel app\models\KasSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Kas Besar | '.Yii::$app->params['shortname'];
+$this->title = 'Kas Kecil | '.Yii::$app->params['shortname'];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="kas-index">
@@ -65,9 +65,9 @@ $form = ActiveForm::begin();
     $session = Yii::$app->session;
     if($session->isActive)
     {
-        $saldo_id = $session->get('saldo_id');
+        $saldo_id_kecil = $session->get('saldo_id_kecil');
 
-        $saldo = Saldo::find()->where(['id' => $saldo_id])->one();
+        $saldo = Saldo::find()->where(['id' => $saldo_id_kecil])->one();
 
         if(!empty($saldo))
         {

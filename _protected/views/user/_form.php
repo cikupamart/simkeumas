@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
         <?= $form->field($user, 'username')->textInput(
                 ['placeholder' => Yii::t('app', 'Create username'), 'autofocus' => true]) ?>
-        
+        <?= $form->field($user, 'nama')->input('nama', ['placeholder' => Yii::t('app', 'Enter a name')]) ?>
         <?= $form->field($user, 'email')->input('email', ['placeholder' => Yii::t('app', 'Enter e-mail')]) ?>
 
         <?php if ($user->scenario === 'create'): ?>

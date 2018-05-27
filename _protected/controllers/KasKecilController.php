@@ -3,17 +3,18 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Kas;
-use app\models\KasSearch;
+use app\models\KasKecil;
+use app\models\KasKecilSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
 use app\models\Saldo;
 
 /**
- * KasController implements the CRUD actions for Kas model.
+ * KasKecilController implements the CRUD actions for KasKecil model.
  */
-class KasController extends Controller
+class KasKecilController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -32,28 +33,27 @@ class KasController extends Controller
 
     public function actionKeluar()
     {
-        $model = new Kas();
+        $model = new KasKecil();
 
         $session = Yii::$app->session;
            
-        $saldo_id = 0;
+        $saldo_id_kecil = 0;
 
         if($session->isActive)
         {
             $username = $session->get('username');    
             $model->penanggung_jawab = $username;
-            $saldo_id = $session->get('saldo_id');
+            $saldo_id_kecil = $session->get('saldo_id_kecil');
         }
 
         if ($model->load(Yii::$app->request->post())) {
 
-            $saldo = Saldo::find()->where(['id' => $saldo_id])->one();
+            $saldo = Saldo::find()->where(['id' => $saldo_id_kecil])->one();
 
             if(!empty($saldo))
             {
                 $saldo->nilai_akhir -= $model->kas_keluar;
                 $saldo->save(false,['nilai_akhir']);
-
 
             }
 
@@ -74,7 +74,7 @@ class KasController extends Controller
 
     public function actionMasuk()
     {
-        $model = new Kas();
+        $model = new KasKecil();
 
         $session = Yii::$app->session;
            
@@ -88,7 +88,7 @@ class KasController extends Controller
             $model->jenis_kas = 1;            
             $model->save();
              Yii::$app->session->setFlash('success', "Data tersimpan");
-            return $this->redirect(['/kas/index']);
+            return $this->redirect(['index']);
         }
 
         $jenis = 1;
@@ -99,13 +99,15 @@ class KasController extends Controller
         ]);
     }
 
+
     /**
-     * Lists all Kas models.
+     * Lists all KasKecil models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new KasSearch();
+        $searchModel = new KasKecilSearch();
+
         if(!empty($_POST['bulan']) && !empty($_POST['tahun']))
         {
             $y = $_POST['tahun'];
@@ -123,7 +125,7 @@ class KasController extends Controller
     }
 
     /**
-     * Displays a single Kas model.
+     * Displays a single KasKecil model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -136,13 +138,13 @@ class KasController extends Controller
     }
 
     /**
-     * Creates a new Kas model.
+     * Creates a new KasKecil model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Kas();
+        $model = new KasKecil();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -154,7 +156,7 @@ class KasController extends Controller
     }
 
     /**
-     * Updates an existing Kas model.
+     * Updates an existing KasKecil model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -168,16 +170,13 @@ class KasController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        $jenis = $model->jenis_kas;
-
         return $this->render('update', [
             'model' => $model,
-            'jenis' => $jenis
         ]);
     }
 
     /**
-     * Deletes an existing Kas model.
+     * Deletes an existing KasKecil model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -191,15 +190,15 @@ class KasController extends Controller
     }
 
     /**
-     * Finds the Kas model based on its primary key value.
+     * Finds the KasKecil model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Kas the loaded model
+     * @return KasKecil the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Kas::findOne($id)) !== null) {
+        if (($model = KasKecil::findOne($id)) !== null) {
             return $model;
         }
 

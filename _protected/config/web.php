@@ -5,7 +5,7 @@ $params = require(__DIR__ . '/params.php');
 $config = [
     'defaultRoute' => 'kas/index',
     'id' => 'basic',
-    'name' => 'SIMKEUMAS - Sistem Keuangan Masjid',
+    'name' => 'Sistem Keuangan Masjid',
     
     'language' => 'en',
     'basePath' => dirname(__DIR__),

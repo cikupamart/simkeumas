@@ -8,6 +8,8 @@ use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
 use app\models\SignupForm;
 use app\models\ContactForm;
+use app\models\Saldo;
+
 use yii\helpers\Html;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -161,6 +163,32 @@ class SiteController extends Controller
                 'You have to activate your account first. Please check your email.'));
             return $this->refresh();
         } 
+
+        if($successfulLogin)
+        {
+            $user = $model->getUser();
+
+            $session = Yii::$app->session;
+            $session->open();
+
+            $tanggal = explode('-',date('Y-m-d'));
+            $bulan = $tanggal[1];
+            $tahun = $tanggal[0];
+            $saldobesar = Saldo::find()->where(['jenis'=>'besar','bulan' => $bulan,'tahun'=>$tahun])->one();
+
+            $session->set('saldo_id',$saldobesar->id);
+            $session->set('saldo_awal',$saldobesar->nilai_awal);
+            
+            $saldokecil = Saldo::find()->where(['jenis'=>'kecil','bulan' => $bulan,'tahun'=>$tahun])->one();
+
+            $session->set('saldo_id_kecil',$saldokecil->id);
+            $session->set('saldo_awal_kecil',$saldokecil->nilai_awal);
+            
+            $session->set('username',$user->username);
+            $session->set('nama',$user->nama);
+
+
+        }
 
         // if user is not denied because he is not active, then his credentials are not good
         if ($successfulLogin === false) {

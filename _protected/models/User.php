@@ -51,6 +51,8 @@ class User extends UserIdentity
         return [
             ['username', 'filter', 'filter' => 'trim'],
             ['username', 'required'],
+            ['nama', 'required'],
+            ['nama', 'string', 'min' => 5,'max' => 255],
             ['username', 'string', 'min' => 2, 'max' => 255],
             ['username', 'match',  'not' => true,
                 // we do not want to allow users to pick one of spam/bad usernames 
@@ -118,6 +120,7 @@ class User extends UserIdentity
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'nama' => Yii::t('app', 'Nama'),
             'username' => Yii::t('app', 'Username'),
             'password' => Yii::t('app', 'Password'),
             'email' => Yii::t('app', 'Email'),

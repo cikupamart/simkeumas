@@ -8,6 +8,7 @@ use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
+use kartik\nav\NavX;
 
 AppAsset::register($this);
 ?>
@@ -50,8 +51,23 @@ AppAsset::register($this);
 
 
         $menuItems[] = ['label' => Yii::t('app', 'Kas'), 'url' => '#','items'=>[
-            ['label' => Yii::t('app', 'Masuk'),'url' => ['kas/masuk']],
-            ['label' => Yii::t('app', 'Keluar'),'url' => ['kas/keluar']],
+             ['label' => 'Kas Kecil',  
+                'url' => ['#'],
+                'items' => [
+                    ['label' => Yii::t('app', 'Manage'),'url' => ['kas-kecil/index']],
+                    ['label' => Yii::t('app', 'Masuk'),'url' => ['kas-kecil/masuk']],
+                    ['label' => Yii::t('app', 'Keluar'),'url' => ['kas-kecil/keluar']],
+                ],
+            ],
+            ['label' => 'Kas Besar',  
+                'url' => ['#'],
+                'items' => [
+                    ['label' => Yii::t('app', 'Manage'),'url' => ['kas/index']],
+                    ['label' => Yii::t('app', 'Masuk'),'url' => ['kas/masuk']],
+                    ['label' => Yii::t('app', 'Keluar'),'url' => ['kas/keluar']],
+                ],
+            ],
+           
            
         ]];
 
@@ -63,8 +79,14 @@ AppAsset::register($this);
         ]];
 
 
-      
-        $menuItems[] = ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index']];
+         $menuItems[] = ['label' => Yii::t('app', 'Master'), 'url' => '#','items'=>[
+            ['label' => Yii::t('app', 'Perkiraan'),'url' => ['/perkiraan/index']],
+            ['label' => Yii::t('app', 'Saldo'),'url' => ['/saldo/index']],
+            ['label' => Yii::t('app', 'Users'),'url' => ['/user/index']],
+            // ['label' => Yii::t('app', 'Rekapitulasi'),'url' => ['kas/laporan']],
+           
+        ]];
+
     }
 
 
@@ -84,11 +106,11 @@ AppAsset::register($this);
         $menuItems[] = ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']];
     }
 
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
+    echo NavX::widget([
+        'options' => ['class' => 'navbar-nav navbar-right '],
         'items' => $menuItems,
+        'encodeLabels' =>false
     ]);
-
     NavBar::end();
     ?>
 
