@@ -78,8 +78,62 @@ class KasKecil extends \yii\db\ActiveRecord
             'jenis_kas' => 'Jenis Kas',
             'kas_keluar' => 'Kas Keluar',
             'kas_masuk' => 'Kas Masuk',
+             'saldo' => 'Saldo',
             'created' => 'Created',
         ];
+    }
+
+    public static function updateSaldo($bulan, $tahun)
+    {
+        
+        
+        $y = $tahun;
+        $m = $bulan;
+        $sd = $y.'-'.$m.'-01';
+        $ed = $y.'-'.$m.'-'.date('t');
+        
+        $kas = KasKecil::find()->where(['between','tanggal',$sd,$ed])->orderBy(['tanggal'=>'ASC'])->all();
+
+        $saldo_awal = 0;
+        $session = Yii::$app->session;
+        if($session->isActive)
+        {
+            $saldo_id_kecil = $session->get('saldo_id_kecil');
+
+            $saldo = Saldo::find()->where(['id' => $saldo_id_kecil])->one();
+
+            if(!empty($saldo))
+            {
+                $saldo_awal = $saldo->nilai_awal;
+                
+            }
+        }
+
+        else
+        {
+            $saldo = Saldo::find()->where(['jenis' => 'kecil','bulan'=>$bulan,'tahun'=>$tahun])->one();
+
+            if(!empty($saldo))
+            {
+                $saldo_awal = $saldo->nilai_awal;
+                
+            }
+        }
+
+        $saldo = $saldo_awal;
+        foreach($kas as $k)
+        {
+            if($k->jenis_kas == 1)
+                $saldo = $saldo + $k->kas_masuk;
+            else
+                $saldo = $saldo - $k->kas_keluar;  
+            
+            $k->saldo = $saldo;
+            $k->save();
+
+        }
+
+
     }
 
     /**
@@ -96,6 +150,6 @@ class KasKecil extends \yii\db\ActiveRecord
         foreach ($provider as $item) {
           $total += $item[$columnName];
       }
-      return $total;  
+      return number_format($total,2,',','.');  
     }
 }

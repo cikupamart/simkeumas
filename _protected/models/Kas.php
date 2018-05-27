@@ -80,6 +80,59 @@ class Kas extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function updateSaldo($bulan, $tahun)
+    {
+        
+        
+        $y = $tahun;
+        $m = $bulan;
+        $sd = $y.'-'.$m.'-01';
+        $ed = $y.'-'.$m.'-'.date('t');
+        
+        $kas = Kas::find()->where(['between','tanggal',$sd,$ed])->orderBy(['tanggal'=>'ASC'])->all();
+
+        $saldo_awal = 0;
+        $session = Yii::$app->session;
+        if($session->isActive)
+        {
+            $saldo_id = $session->get('saldo_id');
+
+            $saldo = Saldo::find()->where(['id' => $saldo_id])->one();
+
+            if(!empty($saldo))
+            {
+                $saldo_awal = $saldo->nilai_awal;
+                
+            }
+        }
+
+        else
+        {
+            $saldo = Saldo::find()->where(['jenis' => 'besar','bulan'=>$bulan,'tahun'=>$tahun])->one();
+
+            if(!empty($saldo))
+            {
+                $saldo_awal = $saldo->nilai_awal;
+                
+            }
+        }
+
+        $saldo = $saldo_awal;
+        foreach($kas as $k)
+        {
+            if($k->jenis_kas == 1)
+                $saldo = $saldo + $k->kas_masuk;
+            else
+                $saldo = $saldo - $k->kas_keluar;  
+            
+            $k->saldo = $saldo;
+            $k->save();
+
+        }
+
+
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -94,7 +147,7 @@ class Kas extends \yii\db\ActiveRecord
         foreach ($provider as $item) {
           $total += $item[$columnName];
       }
-      return $total;  
+      return number_format($total,2,',','.');  
     }
 
    

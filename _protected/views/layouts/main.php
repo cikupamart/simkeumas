@@ -36,7 +36,7 @@ AppAsset::register($this);
     ]);
 
     // everyone can see Home page
-    $menuItems[] = ['label' => Yii::t('app', 'Home'), 'url' => ['/kas/index']];
+   
 
     
     // we do not need to display About and Contact pages to employee+ roles
@@ -48,7 +48,7 @@ AppAsset::register($this);
     // display Users to admin+ roles
     if (Yii::$app->user->can('admin')){
 
-
+         $menuItems[] = ['label' => Yii::t('app', 'Home'), 'url' => ['/kas/index']];
 
         $menuItems[] = ['label' => Yii::t('app', 'Kas'), 'url' => '#','items'=>[
              ['label' => 'Kas Kecil',  
@@ -102,6 +102,8 @@ AppAsset::register($this);
 
     // display Signup and Login pages to guests of the site
     if (Yii::$app->user->isGuest) {
+        $menuItems[] = ['label' => Yii::t('app', 'Kas Besar'), 'url' => ['/kas/index']];
+        $menuItems[] = ['label' => Yii::t('app', 'Kas Kecil'), 'url' => ['/kas-kecil/index']];
         // $menuItems[] = ['label' => Yii::t('app', 'Signup'), 'url' => ['/site/signup']];
         $menuItems[] = ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']];
     }

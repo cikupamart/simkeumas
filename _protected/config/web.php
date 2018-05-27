@@ -21,6 +21,12 @@ $config = [
         ]
     ],
     'components' => [
+        'formatter' => [
+            'class' => 'yii\i18n\formatter',
+            'thousandSeparator' => '.',
+            'decimalSeparator' => ',',
+            'currencyCode' => ''
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => '98BA9434F543A8BC9DF937E3D4CBC',

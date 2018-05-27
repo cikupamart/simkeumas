@@ -60,7 +60,15 @@ class KasController extends Controller
             
             $model->jenis_kas = 0;
             $model->save();
+            $tgl = explode('-', $model->tanggal);
+
+            $y = $tgl[0];
+            $m = $tgl[1];
+
+            Kas::updateSaldo($m,$y);
+
             Yii::$app->session->setFlash('success', "Data tersimpan");
+
             return $this->redirect(['index']);
         }
 
@@ -87,7 +95,14 @@ class KasController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->jenis_kas = 1;            
             $model->save();
-             Yii::$app->session->setFlash('success', "Data tersimpan");
+
+            $tgl = explode('-', $model->tanggal);
+
+            $y = $tgl[0];
+            $m = $tgl[1];
+
+            Kas::updateSaldo($m,$y);
+            Yii::$app->session->setFlash('success', "Data tersimpan");
             return $this->redirect(['/kas/index']);
         }
 
@@ -113,6 +128,8 @@ class KasController extends Controller
             $searchModel->start_date = $y.'-'.$m.'-01';
             $searchModel->end_date = $y.'-'.$m.'-'.date('t');
         }
+
+
 
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 

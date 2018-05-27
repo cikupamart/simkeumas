@@ -23,7 +23,7 @@ class KasKecilSearch extends KasKecil
         return [
             [['id', 'jenis_kas'], 'integer'],
             [['kwitansi', 'penanggung_jawab', 'perkiraan_id', 'keterangan', 'tanggal', 'created','start_date','end_date'], 'safe'],
-            [['kas_keluar', 'kas_masuk'], 'number'],
+            [['kas_keluar', 'kas_masuk','saldo'], 'number'],
         ];
     }
 
@@ -68,6 +68,7 @@ class KasKecilSearch extends KasKecil
             'jenis_kas' => $this->jenis_kas,
             'kas_keluar' => $this->kas_keluar,
             'kas_masuk' => $this->kas_masuk,
+             'saldo' => $this->saldo,
             'created' => $this->created,
         ]);
 

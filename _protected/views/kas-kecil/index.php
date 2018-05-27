@@ -7,6 +7,7 @@ use yii\widgets\ActiveForm;
 use \kartik\grid\GridView;
 
 use app\models\Saldo;
+use app\models\KasKecil;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\KasSearch */
@@ -75,85 +76,74 @@ $form = ActiveForm::begin();
             
         }
     }
-    ?><div class="grid-view hide-resize">
+
+    else
+    {
+        $saldo = Saldo::find()->where(['jenis' => 'kecil','bulan'=>$bulan,'tahun'=>$tahun])->one();
+
+        if(!empty($saldo))
+        {
+            $saldo_awal = $saldo->nilai_awal;
+            
+        }
+    }
+    ?>    <div class="grid-view hide-resize">
 <div id="w1-container" class="table-responsive kv-grid-container">
-    <table class="kv-grid-table table table-bordered table-striped">
+    <table class="kv-grid-table table ">
         <thead>
-<tr>
-            <th> </th>
-            <th> </th>
-            <th> </th>
-            <th> </th>
-            <th></th>
-            <th>Saldo Awal</th>
-            <th style="text-align: right;"><?=number_format($saldo_awal,2,',','.');?></th>
+<tr>         <th width="25%">&nbsp;</th>
+            <th width="25%">&nbsp;</th>
+            <th style="text-align: right;" width="20%"><h4>Saldo Awal</h4></th>
+            <th style="text-align: right;"><h4><?=number_format($saldo_awal,2,',','.');?></h4></th>
         </tr>
-<tr>
-            <th>Kwitansi</th>
-            <th>PJ</th>
-            <th>Tanggal</th>
-            <th>Keterangan</th>
-            <th>Kas Masuk</th>
-            <th>Kas Keluar</th>
-            <th>Saldo</th>
-        </tr>
+
 
 </thead>
+</table></div></div>
+<?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        // 'filterModel' => $searchModel,
+        'showFooter' => true,
+        'footerRowOptions'=>['style'=>'text-align:right;'],
+        'responsiveWrap' => false,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
 
- <tbody>
-            <?php 
-            $total_masuk = 0;
-            $total_keluar = 0;
-            $saldo = $saldo_awal;
-            foreach ($dataProvider->models as $model) 
-            {
-
-                $total_keluar += $model->kas_keluar;
-                $total_masuk += $model->kas_masuk;
-
-                
-
-                if($model->jenis_kas == 1)
-                {
-                    $saldo = $saldo + $model->kas_masuk;
-                }
-
-                else{
-                    $saldo = $saldo - $model->kas_keluar;   
-                }
-                # code...
+            // 'id',
             
-            ?>
-            <tr>
-            <td><?=$model->kwitansi;?></td>
-            <td><?=$model->penanggung_jawab;?></td>
-            <td><?=$model->tanggal;?></td>
-            <td><?=$model->keterangan;?></td>
-            <td style="text-align: right;"><?=number_format($model->kas_masuk,2,',','.');?></td>
-            <td style="text-align: right;"><?=number_format($model->kas_keluar,2,',','.');?></td>
-            <td style="text-align: right;">
-                <?= number_format($saldo,2,',','.');?>
-                    
-                </td>
-            </tr>
-            <?php
-}
-             ?>
-        </tbody>
-<tfoot>
+            'kwitansi',
+             [
+             'attribute' =>'penanggung_jawab',
+             'footer' => '<strong>Total</strong>',
+            ],
 
-<tr class="kv-table-footer">
-    <td>&nbsp;</td>
-    <td><strong>Total</strong></td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <th style="text-align: right;"><?=number_format($total_masuk,2,',','.');?></th>
-    <th style="text-align: right;"><?=number_format($total_keluar,2,',','.');?></th>
-    <th style="text-align: right;"><?=number_format($saldo,2,',','.');?></th>
-</tr>
+            'keterangan:ntext',
+            'tanggal',
+            //'jenis_kas',
+            
 
-</tfoot>
-    </table>
-</div>
-</div>
+            [
+             'attribute' =>'kas_keluar',
+             'footer' => KasKecil::getTotal($dataProvider->models, 'kas_keluar'),
+             'format'=>'Currency',
+             'contentOptions' => ['class' => 'text-right'],
+
+            ],
+
+            [
+             'attribute' =>'kas_masuk',
+             'footer' => KasKecil::getTotal($dataProvider->models, 'kas_masuk'),
+             'format'=>'Currency',
+             'contentOptions' => ['class' => 'text-right'],
+            ],
+            [
+                'attribute' =>'saldo',
+                'format'=>'Currency',
+                'contentOptions' => ['class' => 'text-right'],
+            ],
+            //'created',
+
+            ['class' => 'yii\grid\ActionColumn','visible'=>Yii::$app->user->can('admin')],
+        ],
+    ]); ?>
 </div>

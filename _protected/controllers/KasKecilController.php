@@ -60,6 +60,13 @@ class KasKecilController extends Controller
             
             $model->jenis_kas = 0;
             $model->save();
+
+            $tgl = explode('-', $model->tanggal);
+
+            $y = $tgl[0];
+            $m = $tgl[1];
+
+            KasKecil::updateSaldo($m,$y);
             Yii::$app->session->setFlash('success', "Data tersimpan");
             return $this->redirect(['index']);
         }
@@ -87,6 +94,13 @@ class KasKecilController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->jenis_kas = 1;            
             $model->save();
+
+            $tgl = explode('-', $model->tanggal);
+
+            $y = $tgl[0];
+            $m = $tgl[1];
+
+            KasKecil::updateSaldo($m,$y);
              Yii::$app->session->setFlash('success', "Data tersimpan");
             return $this->redirect(['index']);
         }
@@ -170,8 +184,11 @@ class KasKecilController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+         $jenis = $model->jenis_kas;
+
         return $this->render('update', [
             'model' => $model,
+            'jenis' => $jenis
         ]);
     }
 
