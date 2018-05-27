@@ -3,7 +3,7 @@
 $params = require(__DIR__ . '/params.php');
 
 $config = [
-    'defaultRoute' => 'kas/index',
+    // 'defaultRoute' => ['kas/index','uk'=>'besar'],
     'id' => 'basic',
     'name' => 'Sistem Keuangan Masjid',
     

@@ -44,9 +44,10 @@ class KasSearch extends Kas
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params,$uk)
     {
-        $query = Kas::find();
+
+        $query = Kas::find()->where(['kas_besar_kecil'=>$uk]);
 
         // add conditions that should always apply here
 
@@ -63,8 +64,10 @@ class KasSearch extends Kas
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
+        $session = Yii::$app->session;
+        $userPt = '';
+            
+        $where = [
             'id' => $this->id,
             'tanggal' => $this->tanggal,
             'jenis_kas' => $this->jenis_kas,
@@ -72,13 +75,30 @@ class KasSearch extends Kas
             'kas_masuk' => $this->kas_masuk,
             'saldo' => $this->saldo,
             'created' => $this->created,
-        ]);
+            'kas_besar_kecil' => $uk
+        ];
+
+        if($session->isActive)
+        {
+            $userLevel = $session->get('level');    
+            
+            if($userLevel == 'admin'){
+                $userPt = $session->get('perusahaan');
+                array_merge($where,[
+                    'perusahaan_id' => $userPt
+                ]);
+            }
+        }
+        
+        // grid filtering conditions
+        $query->andFilterWhere($where);
 
         if(empty($this->start_date) && empty($this->end_date))
         {
             $this->start_date = date('Y-m-01');
             $this->end_date = date('Y-m-t');
         }
+
 
         $query->andFilterWhere(['between', 'tanggal', $this->start_date, $this->end_date]);
         $query->orderBy(['tanggal'=>'ASC']);

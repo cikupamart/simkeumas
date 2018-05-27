@@ -30,7 +30,12 @@ class KasController extends Controller
         ];
     }
 
-    public function actionKeluar()
+    public function actionUpdateSaldo($uk)
+    {
+        Kas::updateSaldo($uk,5,2018);
+    }
+
+    public function actionKeluar($uk='')
     {
         $model = new Kas();
 
@@ -38,79 +43,84 @@ class KasController extends Controller
            
         $saldo_id = 0;
 
+        $userPt = '';   
         if($session->isActive)
         {
             $username = $session->get('username');    
             $model->penanggung_jawab = $username;
-            $saldo_id = $session->get('saldo_id');
+
+            $userLevel = $session->get('level');    
+        
+            if($userLevel == 'admin'){
+                $userPt = $session->get('perusahaan');
+            }
         }
 
         if ($model->load(Yii::$app->request->post())) {
+            $model->jenis_kas = 0;    
+            $model->kas_besar_kecil = $uk;
+            $model->perusahaan_id = $userPt;
 
-            $saldo = Saldo::find()->where(['id' => $saldo_id])->one();
-
-            if(!empty($saldo))
-            {
-                $saldo->nilai_akhir -= $model->kas_keluar;
-                $saldo->save(false,['nilai_akhir']);
-
-
-            }
-
-            
-            $model->jenis_kas = 0;
-            $model->save();
+            $model->save();    
             $tgl = explode('-', $model->tanggal);
 
             $y = $tgl[0];
             $m = $tgl[1];
 
-            Kas::updateSaldo($m,$y);
-
+            Kas::updateSaldo($uk,$m,$y);
             Yii::$app->session->setFlash('success', "Data tersimpan");
-
-            return $this->redirect(['index']);
+            return $this->redirect(['/kas/index','uk'=>$uk]);
         }
 
         $jenis = 0;
 
         return $this->render('create', [
             'model' => $model,
-            'jenis' => $jenis
+            'jenis' => $jenis,
+            'uk'=> $uk
         ]);
     }
 
-    public function actionMasuk()
+    public function actionMasuk($uk='')
     {
         $model = new Kas();
 
         $session = Yii::$app->session;
-           
+         
+        $userPt = '';   
         if($session->isActive)
         {
             $username = $session->get('username');    
             $model->penanggung_jawab = $username;
+
+            $userLevel = $session->get('level');    
+        
+            if($userLevel == 'admin'){
+                $userPt = $session->get('perusahaan');
+            }
         }
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->jenis_kas = 1;            
-            $model->save();
-
+            $model->jenis_kas = 1;    
+            $model->perusahaan_id = $userPt;
+            $model->kas_besar_kecil = $uk;
+            $model->save();    
             $tgl = explode('-', $model->tanggal);
 
             $y = $tgl[0];
             $m = $tgl[1];
 
-            Kas::updateSaldo($m,$y);
+            Kas::updateSaldo($uk,$m,$y);
             Yii::$app->session->setFlash('success', "Data tersimpan");
-            return $this->redirect(['/kas/index']);
+            return $this->redirect(['/kas/index','uk'=>$uk]);
         }
 
         $jenis = 1;
 
         return $this->render('create', [
             'model' => $model,
-            'jenis' => $jenis
+            'jenis' => $jenis,
+            'uk'=> $uk
         ]);
     }
 
@@ -118,7 +128,7 @@ class KasController extends Controller
      * Lists all Kas models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($uk = '')
     {
         $searchModel = new KasSearch();
         if(!empty($_POST['bulan']) && !empty($_POST['tahun']))
@@ -131,11 +141,12 @@ class KasController extends Controller
 
 
 
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$uk);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'uk' => $uk
         ]);
     }
 

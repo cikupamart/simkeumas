@@ -15,7 +15,7 @@ use yii\web\JsExpression;
 
 <div class="kas-form">
 
-    <?php $form = ActiveForm::begin(); 
+    <?php $form = ActiveForm::begin(['action'=>['kas/keluar','uk'=>$uk]]); 
     $model->jenis_kas =0;
     ?>
 

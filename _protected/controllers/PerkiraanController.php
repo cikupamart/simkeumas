@@ -31,14 +31,25 @@ class PerkiraanController extends Controller
     }
 
     public function actionAjaxPerkiraan($q = null, $id = null) {
+        $session = Yii::$app->session;
+        $userPt = '';
+            
+        if($session->isActive)
+        {
+            $userLevel = $session->get('level');    
+            
+            if($userLevel == 'admin'){
+                $userPt = $session->get('perusahaan');
+            }
+        }
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $out = ['results' => ['id' => '', 'text' => '']];
         if (!is_null($q)) {
             $query = new Query;
-            $query->select(['kode as id','CONCAT(kode," - ",nama) as text'])
+            $query->select(['id','CONCAT(kode," - ",nama) as text'])
                 ->from('perkiraan')
-                ->where(['like', 'nama', $q])
-                ->orWhere(['like','kode',$q])
+                ->where(['and',['perusahaan_id'=>$userPt]])
+                ->orWhere(['or',['like', 'nama', $q],['like','kode',$q]])
                 ->limit(20);
             $command = $query->createCommand();
             $data = $command->queryAll();

@@ -12,7 +12,7 @@ use app\models\Saldo;
 /* @var $searchModel app\models\KasSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Kas Besar | '.Yii::$app->params['shortname'];
+$this->title = 'Kas '.ucwords($uk).' | '.Yii::$app->params['shortname'];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="kas-index">
@@ -65,8 +65,27 @@ $form = ActiveForm::begin();
     ActiveForm::end();
 
     $saldo_awal = 0;
-   
-    $saldo = Saldo::find()->where(['jenis' => 'besar','bulan'=>$bulan,'tahun'=>$tahun])->one();
+    
+    $session = Yii::$app->session;
+    $userPt = '';
+        
+    $where = ['jenis' => $uk,'bulan'=>$bulan,'tahun'=>$tahun];
+    if($session->isActive)
+    {
+        $userLevel = $session->get('level');    
+        
+        if($userLevel == 'admin'){
+            $userPt = $session->get('perusahaan');
+            array_merge($where,[
+                'perusahaan_id' => $userPt
+            ]);
+            
+           
+        }
+    }
+
+
+    $saldo = Saldo::find()->where($where)->one();
 
     if(!empty($saldo))
     {

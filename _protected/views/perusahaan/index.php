@@ -4,32 +4,35 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\PerkiraanSearch */
+/* @var $searchModel app\models\PerusahaanSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Perkiraans';
+$this->title = 'Perusahaan';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="perkiraan-index">
+<div class="perusahaan-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Perkiraan', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Perusahaan', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'kode',
+           
             'nama',
-            'parent',
-            'perusahaan_id',
+            'email:email',
+            'alamat',
+            'telp',
+            'jenisPerusahaan',
+            'level',
+            // 'created_at',
+            // 'updated_at',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -19,6 +19,7 @@ use Yii;
  */
 class Kas extends \yii\db\ActiveRecord
 {
+
     /**
      * {@inheritdoc}
      */
@@ -49,14 +50,13 @@ class Kas extends \yii\db\ActiveRecord
         return [
             [['penanggung_jawab', 'keterangan', 'tanggal','perkiraan_id'], 'required'],
             [['keterangan'], 'string'],
-            [['tanggal', 'created'], 'safe'],
+            [['tanggal', 'created','kas_besar_kecil'], 'safe'],
             [['jenis_kas'], 'integer'],
             [['kas_keluar', 'kas_masuk'], 'number'],
             [['kwitansi'], 'string', 'max' => 50],
             [['kwitansi'], 'autonumber', 'format'=>'KW.'.date('Y-m-d').'.?'],
             [['penanggung_jawab'], 'string', 'max' => 255],
-            [['perkiraan_id'], 'string', 'max' => 20],
-            [['perkiraan_id'], 'exist', 'skipOnError' => true, 'targetClass' => Perkiraan::className(), 'targetAttribute' => ['perkiraan_id' => 'kode']],
+            [['perkiraan_id'], 'exist', 'skipOnError' => true, 'targetClass' => Perkiraan::className(), 'targetAttribute' => ['perkiraan_id' => 'id']],
         ];
     }
 
@@ -69,18 +69,19 @@ class Kas extends \yii\db\ActiveRecord
             'id' => 'ID',
             'kwitansi' => 'Kwitansi',
             'penanggung_jawab' => 'Penanggung Jawab',
-             'perkiraan_id' => 'Perkiraan',
+            'perkiraan_id' => 'Perkiraan',
             'keterangan' => 'Keterangan',
             'tanggal' => 'Tanggal',
             'jenis_kas' => 'Jenis Kas',
             'kas_keluar' => 'Kas Keluar',
             'kas_masuk' => 'Kas Masuk',
             'saldo' => 'Saldo',
+            'kas_besar_kecil' => 'Ukuran Kas',
             'created' => 'Created',
         ];
     }
 
-    public static function updateSaldo($bulan, $tahun)
+    public static function updateSaldo($uk,$bulan, $tahun)
     {
         
         
@@ -89,33 +90,45 @@ class Kas extends \yii\db\ActiveRecord
         $sd = $y.'-'.$m.'-01';
         $ed = $y.'-'.$m.'-'.date('t');
         
-        $kas = Kas::find()->where(['between','tanggal',$sd,$ed])->orderBy(['tanggal'=>'ASC'])->all();
+       
 
         $saldo_awal = 0;
         $session = Yii::$app->session;
+        $userPt = '';
+        $where = ['between','tanggal',$sd,$ed];
         if($session->isActive)
         {
-            $saldo_id = $session->get('saldo_id');
+            $userLevel = $session->get('level');    
+            
+            if($userLevel == 'admin'){
+                $userPt = $session->get('perusahaan');
 
-            $saldo = Saldo::find()->where(['id' => $saldo_id])->one();
-
-            if(!empty($saldo))
-            {
-                $saldo_awal = $saldo->nilai_awal;
-                
+                // print_r($where);exit;    
             }
+
         }
 
-        else
+        $whereSaldo = ['bulan' => $bulan,'tahun'=>$tahun,'perusahaan_id'=>$userPt,'jenis' => $uk];
+        $saldo = Saldo::find()->where($whereSaldo)->one();
+        
+        if(!empty($saldo))
         {
-            $saldo = Saldo::find()->where(['jenis' => 'besar','bulan'=>$bulan,'tahun'=>$tahun])->one();
-
-            if(!empty($saldo))
-            {
-                $saldo_awal = $saldo->nilai_awal;
-                
-            }
+            $saldo_awal = $saldo->nilai_awal;               
         }
+
+        $kas = Kas::find()->where($where)->andWhere(['perusahaan_id'=>$userPt,'kas_besar_kecil'=>$uk])->orderBy(['tanggal'=>'ASC'])->all();
+        
+
+        // else
+        // {
+        //     $saldo = Saldo::find()->where(['jenis' => 'besar','bulan'=>$bulan,'tahun'=>$tahun])->one();
+
+        //     if(!empty($saldo))
+        //     {
+        //         $saldo_awal = $saldo->nilai_awal;
+                
+        //     }
+        // }
 
         $saldo = $saldo_awal;
         foreach($kas as $k)

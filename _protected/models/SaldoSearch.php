@@ -20,7 +20,7 @@ class SaldoSearch extends Saldo
         return [
             [['id', 'bulan', 'tahun'], 'integer'],
             [['nilai_awal', 'nilai_akhir'], 'number'],
-            [['created','jenis'], 'safe'],
+            [['created','jenis','perusahaan_id'], 'safe'],
         ];
     }
 

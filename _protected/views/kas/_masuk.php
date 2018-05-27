@@ -15,7 +15,7 @@ use yii\web\JsExpression;
 
 <div class="kas-form">
 
-    <?php $form = ActiveForm::begin(); 
+    <?php $form = ActiveForm::begin(['action'=>['kas/masuk','uk'=>$uk]]); 
     $model->jenis_kas = 1;
     ?>
 
@@ -32,7 +32,7 @@ use yii\web\JsExpression;
         //     "change" => 'function() { 
         //         var data_id = $(this).val();
                 
-
+        //         alert(data_id);
         //     }',
         // ],
         'pluginOptions' => [
@@ -58,6 +58,8 @@ use yii\web\JsExpression;
 
 
     <?= $form->field($model, 'keterangan')->textInput(['maxlength' => 100]) ?>
+
+
 
     <?= $form->field($model, 'tanggal')->widget(
         DatePicker::className(),[

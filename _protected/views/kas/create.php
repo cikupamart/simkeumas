@@ -18,12 +18,14 @@ $this->params['breadcrumbs'][] = $this->title;
     switch ($jenis) {
     	case 1:
     		echo $this->render('_masuk', [
+                'uk' => $uk,
 		        'model' => $model,
 		    ]);
     		break;
     	
     	case 0:
     		echo $this->render('_keluar', [
+                'uk' => $uk,
 		        'model' => $model,
 		    ]);
     		break;

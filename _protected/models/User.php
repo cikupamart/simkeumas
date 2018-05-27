@@ -74,6 +74,7 @@ class User extends UserIdentity
             $this->passwordStrengthRule(),
 
             ['status', 'required'],
+            ['perusahaan_id', 'required'],
             ['item_name', 'string', 'min' => 3, 'max' => 64]
         ];
     }
@@ -127,6 +128,7 @@ class User extends UserIdentity
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'perusahaan_id' => Yii::t('app','Perusahaan'),
             'item_name' => Yii::t('app', 'Role'),
         ];
     }

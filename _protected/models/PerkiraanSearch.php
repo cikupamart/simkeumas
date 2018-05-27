@@ -18,6 +18,7 @@ class PerkiraanSearch extends Perkiraan
     public function rules()
     {
         return [
+             [['id', 'perusahaan_id'], 'integer'],
             [['kode', 'nama', 'parent'], 'safe'],
         ];
     }
@@ -55,6 +56,13 @@ class PerkiraanSearch extends Perkiraan
             // $query->where('0=1');
             return $dataProvider;
         }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'perusahaan_id' => $this->perusahaan_id,
+        ]);
+
 
         $query->orderBy(['kode'=>'ASC']);
 

@@ -48,23 +48,23 @@ AppAsset::register($this);
     // display Users to admin+ roles
     if (Yii::$app->user->can('admin')){
 
-         $menuItems[] = ['label' => Yii::t('app', 'Home'), 'url' => ['/kas/index']];
+         $menuItems[] = ['label' => Yii::t('app', 'Home'), 'url' => ['/site/index']];
 
         $menuItems[] = ['label' => Yii::t('app', 'Kas'), 'url' => '#','items'=>[
              ['label' => 'Kas Kecil',  
                 'url' => ['#'],
                 'items' => [
-                    ['label' => Yii::t('app', 'Manage'),'url' => ['kas-kecil/index']],
-                    ['label' => Yii::t('app', 'Masuk'),'url' => ['kas-kecil/masuk']],
-                    ['label' => Yii::t('app', 'Keluar'),'url' => ['kas-kecil/keluar']],
+                   ['label' => Yii::t('app', 'Manage'),'url' => ['kas/index','uk'=>'kecil']],
+                    ['label' => Yii::t('app', 'Masuk'),'url' => ['kas/masuk','uk'=>'kecil']],
+                    ['label' => Yii::t('app', 'Keluar'),'url' => ['kas/keluar','uk'=>'kecil']],
                 ],
             ],
             ['label' => 'Kas Besar',  
                 'url' => ['#'],
                 'items' => [
-                    ['label' => Yii::t('app', 'Manage'),'url' => ['kas/index']],
-                    ['label' => Yii::t('app', 'Masuk'),'url' => ['kas/masuk']],
-                    ['label' => Yii::t('app', 'Keluar'),'url' => ['kas/keluar']],
+                    ['label' => Yii::t('app', 'Manage'),'url' => ['kas/index','uk'=>'besar']],
+                    ['label' => Yii::t('app', 'Masuk'),'url' => ['kas/masuk','uk'=>'besar']],
+                    ['label' => Yii::t('app', 'Keluar'),'url' => ['kas/keluar','uk'=>'besar']],
                 ],
             ],
            
@@ -81,6 +81,7 @@ AppAsset::register($this);
 
          $menuItems[] = ['label' => Yii::t('app', 'Master'), 'url' => '#','items'=>[
             ['label' => Yii::t('app', 'Perkiraan'),'url' => ['/perkiraan/index']],
+            ['label' => Yii::t('app', 'Perusahaan'),'url' => ['/perusahaan/index']],
             ['label' => Yii::t('app', 'Saldo'),'url' => ['/saldo/index']],
             ['label' => Yii::t('app', 'Users'),'url' => ['/user/index']],
             // ['label' => Yii::t('app', 'Rekapitulasi'),'url' => ['kas/laporan']],
@@ -102,8 +103,8 @@ AppAsset::register($this);
 
     // display Signup and Login pages to guests of the site
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => Yii::t('app', 'Kas Besar'), 'url' => ['/kas/index']];
-        $menuItems[] = ['label' => Yii::t('app', 'Kas Kecil'), 'url' => ['/kas-kecil/index']];
+        $menuItems[] = ['label' => Yii::t('app', 'Kas Besar'), 'url' => ['/kas/index','uk'=>'besar']];
+        $menuItems[] = ['label' => Yii::t('app', 'Kas Kecil'), 'url' => ['/kas/index','uk'=>'kecil']];
         // $menuItems[] = ['label' => Yii::t('app', 'Signup'), 'url' => ['/site/signup']];
         $menuItems[] = ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']];
     }

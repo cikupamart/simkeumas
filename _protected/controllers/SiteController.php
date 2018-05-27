@@ -171,20 +171,19 @@ class SiteController extends Controller
             $session = Yii::$app->session;
             $session->open();
 
-            $tanggal = explode('-',date('Y-m-d'));
-            $bulan = $tanggal[1];
-            $tahun = $tanggal[0];
-            $saldobesar = Saldo::find()->where(['jenis'=>'besar','bulan' => $bulan,'tahun'=>$tahun])->one();
+            // $tanggal = explode('-',date('Y-m-d'));
+            // $bulan = $tanggal[1];
+            // $tahun = $tanggal[0];
+            // $saldobesar = Saldo::find()->where(['jenis'=>'besar','bulan' => $bulan,'tahun'=>$tahun])->one();
 
-            $session->set('saldo_id',$saldobesar->id);
-            $session->set('saldo_awal',$saldobesar->nilai_awal);
+            // $session->set('saldo_id',$saldobesar->id);
+            // $session->set('saldo_awal',$saldobesar->nilai_awal);
             
-            $saldokecil = Saldo::find()->where(['jenis'=>'kecil','bulan' => $bulan,'tahun'=>$tahun])->one();
+            // $saldokecil = Saldo::find()->where(['jenis'=>'kecil','bulan' => $bulan,'tahun'=>$tahun])->one();
 
-            $session->set('saldo_id_kecil',$saldokecil->id);
-            $session->set('saldo_awal_kecil',$saldokecil->nilai_awal);
-            
             $session->set('username',$user->username);
+             $session->set('level',$user->getRoleName());
+            $session->set('perusahaan',$user->perusahaan_id);
             $session->set('nama',$user->nama);
 
 

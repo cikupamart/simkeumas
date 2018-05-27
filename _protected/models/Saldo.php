@@ -30,7 +30,7 @@ class Saldo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nilai_awal', 'bulan', 'tahun','jenis'], 'required'],
+            [['nilai_awal', 'bulan', 'tahun','jenis','perusahaan_id'], 'required'],
             [['nilai_awal', 'nilai_akhir'], 'number'],
             [['bulan', 'tahun'], 'integer'],
             [['created'], 'safe'],
@@ -49,6 +49,7 @@ class Saldo extends \yii\db\ActiveRecord
             'bulan' => 'Bulan',
             'tahun' => 'Tahun',
             'jenis' => 'Jenis',
+            'perusahaan_id' => 'Perusahaan',
             'created' => 'Created',
         ];
     }
