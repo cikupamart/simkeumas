@@ -44,6 +44,8 @@ $form = ActiveForm::begin();
     for($i = 2016 ;$i<=date('Y')+50;$i++)
         $tahuns[$i] = $i;
 
+    $bulan = !empty($_POST['bulan']) ? $_POST['bulan'] : date('m');
+    $tahun = !empty($_POST['tahun']) ? $_POST['tahun'] : date('Y');
     ?>
 
     <div class="col-xs-4 col-md-3 col-lg-2">
@@ -63,30 +65,15 @@ $form = ActiveForm::begin();
     ActiveForm::end();
 
     $saldo_awal = 0;
-    $session = Yii::$app->session;
-    if($session->isActive)
+   
+    $saldo = Saldo::find()->where(['jenis' => 'kecil','bulan'=>$bulan,'tahun'=>$tahun])->one();
+
+    if(!empty($saldo))
     {
-        $saldo_id_kecil = $session->get('saldo_id_kecil');
-
-        $saldo = Saldo::find()->where(['id' => $saldo_id_kecil])->one();
-
-        if(!empty($saldo))
-        {
-            $saldo_awal = $saldo->nilai_awal;
-            
-        }
+        $saldo_awal = $saldo->nilai_awal;
+        
     }
-
-    else
-    {
-        $saldo = Saldo::find()->where(['jenis' => 'kecil','bulan'=>$bulan,'tahun'=>$tahun])->one();
-
-        if(!empty($saldo))
-        {
-            $saldo_awal = $saldo->nilai_awal;
-            
-        }
-    }
+    
     ?>    <div class="grid-view hide-resize">
 <div id="w1-container" class="table-responsive kv-grid-container">
     <table class="kv-grid-table table ">

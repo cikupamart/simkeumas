@@ -65,30 +65,15 @@ $form = ActiveForm::begin();
     ActiveForm::end();
 
     $saldo_awal = 0;
-    $session = Yii::$app->session;
-    if($session->isActive)
+   
+    $saldo = Saldo::find()->where(['jenis' => 'besar','bulan'=>$bulan,'tahun'=>$tahun])->one();
+
+    if(!empty($saldo))
     {
-        $saldo_id = $session->get('saldo_id');
-
-        $saldo = Saldo::find()->where(['id' => $saldo_id])->one();
-
-        if(!empty($saldo))
-        {
-            $saldo_awal = $saldo->nilai_awal;
-            
-        }
+        $saldo_awal = $saldo->nilai_awal;
+        
     }
-
-    else
-    {
-        $saldo = Saldo::find()->where(['jenis' => 'besar','bulan'=>$bulan,'tahun'=>$tahun])->one();
-
-        if(!empty($saldo))
-        {
-            $saldo_awal = $saldo->nilai_awal;
-            
-        }
-    }
+    
     ?>
 
     <div class="grid-view hide-resize">
